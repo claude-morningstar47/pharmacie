@@ -144,6 +144,7 @@ const handleOk = async () => {
       // setCurrent(0);
       // setModalVisible(false);
       // setPdfDataUrl(null);
+      // 
     } catch (error) {
       message.error("Échec de la génération du PDF.");
       console.error("PDF Generation Error:", error);
