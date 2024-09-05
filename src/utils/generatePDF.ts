@@ -1,4 +1,3 @@
-// generatePDF.ts
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import { readImageAsBase64 } from "./readImageAsBase64";
@@ -10,13 +9,13 @@ export const generatePDF = async (data: any) => {
   const logoBase64 = await readImageAsBase64();
 
   // Ajouter le logo
-  const logoWidth = 20; // Largeur de votre logo
-  const logoHeight = 20; // Hauteur de votre logo
+  const logoWidth = 20;
+  const logoHeight = 20;
   doc.addImage(logoBase64, "PNG", 14, 10, logoWidth, logoHeight);
 
   // En-tête
   doc.setFontSize(18);
-  doc.text("Rapport du Formulaire", 14 + logoWidth + 10, 22); // Décalez le texte à droite du logo
+  doc.text("Rapport Skinmed", 14 + logoWidth + 10, 22);
 
   // Ajouter une ligne sous l'en-tête
   doc.setLineWidth(0.5);
@@ -26,31 +25,26 @@ export const generatePDF = async (data: any) => {
 
   // Étape 0: Informations Pharmacie
   doc.setFontSize(14);
-  doc.text("Étape 0: Informations Pharmacie", 14, y);
+  doc.text("Informations Pharmacie", 14, y);
   y += 10;
   doc.setFontSize(12);
   const step0 = data["0"];
-  for (const [key, value] of Object.entries(step0)) {
-    doc.text(`${key.replace(/-/g, " ")}: ${value}`, 14, y);
-    y += 8;
-  }
+  const keysStep0 = ["nom-pharmacie", "adresse-pharmacie", "avis", "espace-prive", "etre-referent"];
+  keysStep0.forEach(key => {
+    if (step0[key]) {
+      doc.text(`${key.replace(/-/g, " ")}: ${step0[key]}`, 14, y);
+      y += 8;
+    }
+  });
   y += 10;
 
   // Étape 1: Potentiel (Table)
   doc.setFontSize(14);
-  doc.text("Étape 1: Potentiel", 14, y);
+  doc.text("Potentiel de Dépistage", 14, y);
   y += 10;
   doc.setFontSize(12);
   const step1 = data["1"].potentiel || [];
-
-  // Table headers
-  const tableColumn = [
-    "Zone",
-    "CA",
-    "Euro par Client",
-    "Débit Mensuel",
-    "Clients Annuels",
-  ];
+  const tableColumn = ["Zone", "CA", "Euro par Client", "Débit Mensuel", "Clients Annuels"];
   const tableData = step1.map((item: any) => [
     item.zone || "-",
     item.ca || "",
@@ -59,7 +53,6 @@ export const generatePDF = async (data: any) => {
     item.yearlyClients || "",
   ]);
 
-  // Draw table
   (doc as any).autoTable({
     startY: y,
     head: [tableColumn],
@@ -69,26 +62,66 @@ export const generatePDF = async (data: any) => {
 
   y = (doc as any).lastAutoTable.finalY + 10;
 
-  // Étape 2: Calcul Potentiel
+  // Étape 2: Calcul Potentiel (Table)
   doc.setFontSize(14);
-  doc.text("Étape 2: Calcul Potentiel", 14, y);
+  doc.text("Calcul Potentiel de Dépistage", 14, y);
   y += 10;
-  doc.setFontSize(12);
   const step2 = data["2"]["calcul-potentiel"] || {};
-  for (const [key, value] of Object.entries(step2)) {
-    doc.text(`${key.replace(/-/g, " ")}: ${value}`, 14, y);
-    y += 8;
-  }
-  y += 10;
+  // const tableColumn2 = ["Patients", "Half Patients", "No Follow Up", "Appointments","Risk Without Follow Up", "On Year", "On Five Year"];
+  const tableColumn2 = ["Patients", "Moitié de patients", "Pas de suivi", "Rendez-vous","Risque sans suivi", "Sur un an", "Sur cinq ans"];
+  //                    "Patients",  "Half Patients", "No Follow Up","Appointments","Risk Without Follow Up","On Year", "On Five Year"
+  //                   « Patients », « Moitié de patients », « Pas de suivi », « Rendez-vous », « Risque sans suivi », « Sur un an », « Sur cinq ans »
+  const tableData2 = [
+    [
+      step2.patients || "-",
+      step2.halfPatients || "-",
+      step2.noFollowUp || "-",
+      step2.appointments || "-",
+      step2.riskWithoutFollowUp || "-",
+      step2.onYear || "-",
+      step2.onFiveYear || "-",
+    ],
+  ];
+
+  (doc as any).autoTable({
+    startY: y,
+    head: [tableColumn2],
+    body: tableData2,
+    margin: { top: 10 },
+  });
+
+  y = (doc as any).lastAutoTable.finalY + 10;
 
   // Étape 3: Calcul Réel
   doc.setFontSize(14);
-  doc.text("Étape 3: Calcul Réel", 14, y);
+  doc.text("Calcul Réel", 14, y);
   y += 10;
   doc.setFontSize(12);
   doc.text(`Calcul Réel: ${data["3"]["calcul-reel"] || ""}`, 14, y);
   y += 10;
 
+  // Étape 4: Vente de Produits (Table)
+  doc.setFontSize(14);
+  doc.text("Vente Additionnelle Produits", 14, y);
+  y += 10;
+  const step4 = data["4"].ventePoducts || [];
+  const tableColumn4 = ["Pourcentage", "Total Patients", "Total", "Net", "Marge"];
+  const tableData4 = step4.map((item: any) => [
+    item.pourcentage || "-",
+    item.totalPatients || "",
+    item.total || "",
+    item.net || "",
+    item.marge || "",
+  ]);
+
+  (doc as any).autoTable({
+    startY: y,
+    head: [tableColumn4],
+    body: tableData4,
+    margin: { top: 10 },
+  });
+
   // Sauvegarder le PDF
   return doc.output("datauristring");
 };
+

@@ -66,6 +66,12 @@ main {
   width: auto;
 }
 
+.total-row {
+  font-weight: bold;
+  color: red;
+}
+
+
 
 .highlight-row {
   font-weight: bold;
