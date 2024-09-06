@@ -383,14 +383,20 @@ const DepistageTable: React.FC = () => {
     // Total
 
     const totalAnnee20 = Number(
-      annee1 + annee2Total_20 + annee3Total_20 + annee4Total_20 + annee5Total_20
+      Number(annee1) + Number(annee2Total_20) + Number(annee3Total_20) + Number(annee4Total_20) + Number(annee5Total_20)
     ).toFixed(2);
     const totalAnnee25 = Number(
-      annee1 + annee2Total_25 + annee3Total_25 + annee4Total_25 + annee5Total_25
+      Number(annee1) + Number(annee2Total_25) + Number(annee3Total_25) + Number(annee4Total_25) + Number(annee5Total_25)
     ).toFixed(2);
     const totalAnnee30 = Number(
-      annee1 + annee2Total_30 + annee3Total_30 + annee4Total_30 + annee5Total_30
+      Number(annee1) + Number(annee2Total_30) + Number(annee3Total_30) + Number(annee4Total_30) + Number(annee5Total_30)
     ).toFixed(2);
+
+    // Mensuel
+
+    const mesuel20 = Number(Number(totalAnnee20) / 60).toFixed(2)
+    const mesuel25 = Number(Number(totalAnnee25) / 60).toFixed(2)
+    const mesuel30 = Number(Number(totalAnnee30) / 60).toFixed(2)
 
     return [
       {
@@ -413,9 +419,7 @@ const DepistageTable: React.FC = () => {
         annee5_30: Number(annee5Key1_30),
 
 
-        total20: totalAnnee20,
-        total25: totalAnnee25,
-        total30: totalAnnee30,
+       
       },
       {
         key: "2",
@@ -452,12 +456,24 @@ const DepistageTable: React.FC = () => {
         annee5_20: Number(annee5Total_20),
         annee5_25: Number(annee5Total_25),
         annee5_30: Number(annee5Total_30),
+
+
+        total20: totalAnnee20,
+        total25: totalAnnee25,
+        total30: totalAnnee30,
+
+        mesuel20: mesuel20,
+        mesuel25: mesuel25,
+        mesuel30: mesuel30
       },
      
     ];
   };
 
   const data = useMemo(() => calculateData(), [inputValues]);
+
+  console.log(data);
+  
 
   // Define columns explicitly
   const columns: ColumnsType<DataItem> = [
@@ -656,18 +672,18 @@ const DepistageTable: React.FC = () => {
   const dataTotal = useMemo(() => {
     return [
       {
-        key: 1,
+        key: "total",
         // title: "",
-        total20: data[0]?.total20,
-        total25: data[0]?.total25,
-        total30: data[0]?.total30,
+        total20: data[2]?.total20,
+        total25: data[2]?.total25,
+        total30: data[2]?.total30,
       },
       {
         // key: 2,
         // title: "Mensuel",
-        total20: 33,
-        total25: 44,
-        total30: 43,
+        total20: data[2]?.mesuel20,
+        total25: data[2]?.mesuel25,
+        total30: data[2]?.mesuel30,
       },
     ];
   }, [data]);
