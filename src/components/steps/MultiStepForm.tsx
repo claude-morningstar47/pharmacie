@@ -17,141 +17,75 @@ const MultiStepForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState<any>(null);
-
   const [pdfDataUrl, setPdfDataUrl] = useState<string | null>(null);
   const pdfRef = useRef<HTMLIFrameElement>(null);
 
+  // Étapes du formulaire
   const steps = [
-    {
-      title: "Avis",
-      key: 1,
-      content: <Step1 form={form} />,
-    },
-    {
-      title: "Potentiel",
-      key: 2,
-      content: <Step2 form={form} />,
-    },
-    {
-      title: "Calcul Potentiel",
-      key: 3,
-      content: <Step3 form={form} />,
-    },
-    {
-      title: "Simulation",
-      key: 4,
-      content: <Step4 form={form} />,
-    },
-    {
-      title: "Simulation Crème",
-      key: 5,
-      content: <Step5 form={form} />,
-    },
+    { title: "Avis", component: <Step1 form={form} /> },
+    { title: "Potentiel", component: <Step2 form={form} /> },
+    { title: "Calcul Potentiel", component: <Step3 form={form} /> },
+    { title: "Simulation", component: <Step4 form={form} /> },
+    { title: "Simulation Crème", component: <Step5 form={form} /> },
   ];
 
-  // eslint-disable-next-line
-  const next = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        setStepValues((prev) => ({ ...prev, [current]: values }));
-        setCurrent(current + 1);
-        form.resetFields();
-      })
-      .catch((info) => {
-        console.log("Validation Failed:", info);
-      });
+  // Avancer à l'étape suivante
+  const next = async () => {
+    try {
+      const values = await form.validateFields();
+      setStepValues((prev) => ({ ...prev, [current]: values }));
+      setCurrent((prev) => prev + 1);
+      form.resetFields();
+    } catch (error) {
+      console.log("Validation Failed:", error);
+    }
   };
 
+  // Revenir à l'étape précédente
   const prev = () => {
-    setCurrent(current - 1);
+    setCurrent((prev) => prev - 1);
     form.setFieldsValue(stepValues[current - 1]);
   };
 
-  const waitTime = (time: number = 100) => {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(true), time);
-    });
-  };
-
-  // const onFinish = async (values: any) => {
-  //   setLoading(true);
-  //   await waitTime(1000);
-
-  //   if (current === steps.length - 1) {
-  //     const allStepValues = { ...stepValues, [current]: values };
-
-  //     // Check that each step has data
-  //     const allStepsFilled = steps.every(step => allStepValues.hasOwnProperty(step.key - 1));
-
-  //     if (allStepsFilled) {
-  //       setFormData(allStepValues);
-  //       console.log(allStepValues);
-
-  //       setModalVisible(true); // Show confirmation modal
-  //     } else {
-  //       message.error("Veuillez remplir toutes les étapes du formulaire.");
-  //     }
-  //   } else {
-  //     setStepValues((prev) => ({ ...prev, [current]: values }));
-  //     setCurrent(current + 1);
-  //     // next()
-  //     form.resetFields();
-  //   }
-
-  //   setLoading(false);
-  // };
-
+  // Gérer la soumission du formulaire à la dernière étape
   const onFinish = async (values: any) => {
     setLoading(true);
-    await waitTime(1000);
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Simuler un délai
 
     const allStepValues = { ...stepValues, [current]: values };
-
-    // Vérification que chaque étape a des données
-    const allStepsFilled = steps.every((step) =>
-      allStepValues.hasOwnProperty(step.key - 1)
-    );
+    const allStepsFilled = steps.every((_, index) => allStepValues.hasOwnProperty(index));
 
     if (current === steps.length - 1) {
       if (allStepsFilled) {
         setFormData(allStepValues);
-        console.log(allStepValues);
-        setModalVisible(true); // Afficher la modal de confirmation
+        setModalVisible(true);
       } else {
         message.error("Veuillez remplir toutes les étapes du formulaire.");
       }
     } else {
       setStepValues((prev) => ({ ...prev, [current]: values }));
-      setCurrent(current + 1);
-      form.resetFields();
+      next();
     }
 
     setLoading(false);
   };
 
-
-const handleOk = async () => {
-  if (formData) {      
-    try {
-      const pdfDataUrl = await generatePDF(formData);
-      setPdfDataUrl(pdfDataUrl);
-      message.success("PDF généré avec succès !");
+  // Gérer la génération du PDF
+  const handleOk = async () => {
+    if (formData) {
+      // console.log(JSON.stringify(formData));
       
-      // Réinitialisation du formulaire après génération du PDF
-      form.resetFields();
-      // setStepValues({});
-      // setCurrent(0);
-      // setModalVisible(false);
-      // setPdfDataUrl(null);
-      // 
-    } catch (error) {
-      message.error("Échec de la génération du PDF.");
-      console.error("PDF Generation Error:", error);
+      try {
+        const generatedPdf = await generatePDF(formData);
+        setPdfDataUrl(generatedPdf);
+        message.success("PDF généré avec succès !");
+      } catch (error) {
+        message.error("Erreur lors de la génération du PDF.");
+      }
     }
-  }
-};
+  };
 
+  // Télécharger le PDF généré
   const handleDownloadPDF = () => {
     if (pdfDataUrl) {
       const link = document.createElement("a");
@@ -162,28 +96,26 @@ const handleOk = async () => {
       document.body.removeChild(link);
 
       message.success("PDF téléchargé avec succès !");
-      form.resetFields();
-      setStepValues({});
-      setCurrent(0);
-      setModalVisible(false);
-      setPdfDataUrl(null);
+      resetForm();
     } else {
       message.error("Le PDF n'est pas disponible pour le téléchargement.");
     }
   };
 
-  const handleCancel = () => {
+  // Réinitialiser le formulaire après téléchargement
+  const resetForm = () => {
     form.resetFields();
     setStepValues({});
-    setModalVisible(false);
     setCurrent(0);
+    setModalVisible(false);
+    setPdfDataUrl(null);
   };
 
   return (
     <div>
       <Steps current={current} style={{ marginBottom: 20 }}>
-        {steps.map((item) => (
-          <Step key={item.key} title={item.title} />
+        {steps.map((step, index) => (
+          <Step key={index} title={step.title} />
         ))}
       </Steps>
 
@@ -193,10 +125,11 @@ const handleOk = async () => {
         onFinish={onFinish}
         style={{ maxWidth: "90%", margin: "20px auto" }}
       >
-        {steps[current].content}
+        {steps[current].component}
+
         <div style={{ marginTop: 24 }}>
           {current > 0 && (
-            <Button style={{ margin: "0 8px" }} onClick={prev}>
+            <Button style={{ marginRight: 8 }} onClick={prev}>
               Précédent
             </Button>
           )}
@@ -209,9 +142,9 @@ const handleOk = async () => {
       <Modal
         title="Aperçu du PDF"
         open={modalVisible}
-        onCancel={handleCancel}
+        onCancel={resetForm}
         footer={[
-          <Button key="back" onClick={handleCancel}>
+          <Button key="back" onClick={resetForm}>
             Annuler
           </Button>,
           <Button
@@ -242,10 +175,7 @@ const handleOk = async () => {
             title="Aperçu du PDF"
           />
         ) : (
-          <p>
-            Êtes-vous sûr de vouloir générer un PDF avec les données du
-            formulaire ?
-          </p>
+          <p>Êtes-vous sûr de vouloir générer un PDF avec les données du formulaire ?</p>
         )}
       </Modal>
     </div>
