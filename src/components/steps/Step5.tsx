@@ -267,12 +267,9 @@ const Step5: React.FC<Step5Props> = ({ form }) => {
               bordered
               summary={() => (
                 <Table.Summary.Row>
-                  {/* <Table.Summary.Cell index={0}></Table.Summary.Cell> */}
                   <Table.Summary.Cell index={0}>
                     <Text strong>Marge 26% : </Text> {marge} €
                   </Table.Summary.Cell>
-                  {/* <Table.Summary.Cell index={2}></Table.Summary.Cell> */}
-                  {/* <Table.Summary.Cell index={3}></Table.Summary.Cell> */}
                 </Table.Summary.Row>
               )}
             />

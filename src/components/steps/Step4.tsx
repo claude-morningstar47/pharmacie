@@ -2,7 +2,7 @@
 
 import React from 'react';
 // import { Form, Input } from 'antd';
-import CalculReelTable from './test';
+import DepistageTable from './test';
 
 // const { Item: FormItem } = Form;
 // const { TextArea } = Input;
@@ -26,7 +26,9 @@ const Step4: React.FC<Step4Props> = ({ form }) => {
       </FormItem> */}
 
 
-      <CalculReelTable/>
+      {/* <CalculReelTable/> */}
+      <DepistageTable/>
+      
       
     </>
   );
