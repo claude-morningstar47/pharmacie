@@ -19,12 +19,12 @@ function App() {
               <li>
                 <Link to="/">Accueil</Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/step">Step</Link>
               </li>
               <li>
                 <Link to="/avis">Avis</Link>
-              </li>
+              </li> */}
               <li>
                 <Link to="/potentiel">Potentiel</Link>
               </li>
