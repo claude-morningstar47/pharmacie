@@ -1,0 +1,60 @@
+[
+  {
+    "username": "ODSkinmed",
+    "password": "Delwante25#",
+    "firstName": "Olivier",
+    "lastName": "Delwante",
+    "email": "olivier.delwante@skinmed.com"
+  },
+  {
+    "username": "JGSkinmed",
+    "password": "Gauthier24#",
+    "firstName": "Jennifer",
+    "lastName": "Gauthier",
+    "email": "jennifer.Gauthier@skinmed.com"
+  },
+  {
+    "username": "BCSkinmed",
+    "password": "Chamboissier26#",
+    "firstName": "Benoit",
+    "lastName": "Chamboissier",
+    "email": "benoit.chamboissier@skinmed.com"
+  },
+  {
+    "username": "FTSkinmed",
+    "password": "Tamboers28#",
+    "firstName": "Freddy",
+    "lastName": "Tamboers",
+    "email": "freddy.tamboers@skinmed.com"
+  },
+  {
+    "username": "CJSkinmed",
+    "password": "Joly2344#",
+    "firstName": "Celine",
+    "lastName": "Joly",
+    "email": "celine.joly@skinmed.com"
+  }
+  ,
+  {
+    "username": "TRSkinmed",
+    "password": "Raymond2344#",
+    "firstName": "Théo",
+    "lastName": "Raymond",
+    "email": "théo.raymond@skinmed.com"
+  }
+  ,
+  {
+    "username": "VCSkinmed",
+    "password": "Carre2344#",
+    "firstName": "Vanessa",
+    "lastName": "Carré",
+    "email": "vanessa.carré@skinmed.com"
+  },
+  {
+    "username": "user1",
+    "password": "password1",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com"
+  }
+]
