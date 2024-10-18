@@ -50,6 +50,62 @@
     "lastName": "Carré",
     "email": "vanessa.carré@skinmed.com"
   },
+   {
+      "username": "AMSkinmed",
+      "password": "Alexandra25#",
+      "firstName": "Alexandra",
+      "lastName": "Messe",
+      "email": "alexandra.messe@skinmed.com"
+    },
+    {
+      "username": "ODASkinmed",
+      "password": "Damelon25#",
+      "firstName": "Olivier",
+      "lastName": "Damelon",
+      "email": "olivier.damelon@skinmed.com"
+    },
+    {
+      "username": "FPSkinmed",
+      "password": "Pouleur25#",
+      "firstName": "Frédéric",
+      "lastName": "Pouleur",
+      "email": "frédéric.pouleur@skinmed.com"
+    },
+    {
+      "username": "JWSkinmed",
+      "password": "Wandervoorde25#",
+      "firstName": "Jessica",
+      "lastName": "Wandervoorde",
+      "email": "jessica.wandervoorde@skinmed.com"
+    },
+    {
+      "username": "JJDVSkinmed",
+      "password": "DeVivo25#",
+      "firstName": "Jean-Jacques",
+      "lastName": "De-Vivo",
+      "email": "jean-jacques.de-vivo@skinmed.com"
+    },
+    {
+      "username": "LASkinmed",
+      "password": "Lagarde25#",
+      "firstName": "Aurore",
+      "lastName": "Lagarde",
+      "email": "aurore.lagarde@skinmed.com"
+    },
+    {
+      "username": "RCSkinmed",
+      "password": "Ratzmann25#",
+      "firstName": "Christophe",
+      "lastName": "Ratzmann",
+      "email": "christophe.ratzmann@skinmed.com"
+    },
+    {
+      "username": "CMSkinmed",
+      "password": "Meyer25#",
+      "firstName": "Christian",
+      "lastName": "Meyer",
+      "email": "christian.meyer@skinmed.com"
+    },
   {
     "username": "user1",
     "password": "password1",
